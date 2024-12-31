@@ -32,6 +32,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
+import com.example.submissionbelajarcompose.data.Resource
 import com.example.submissionbelajarcompose.presentation.components.NotFoundLayout
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -42,126 +43,136 @@ fun DetailRecipeScreen(
     id: String
 ) {
 
-    val recipe = viewModel.recipe.collectAsState().value
+    val recipeState = viewModel.recipe.collectAsState()
 
     LaunchedEffect(id) {
         viewModel.getRecipe(id)
 
     }
 
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                navigationIcon = {
-                    IconButton(
-                        onClick = {
-                            navHostController.popBackStack()
-                        }
-                    ) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
-                    }
-                },
-                title = {
-                    Text("Detail Recipe")
-                },
-                actions = {
-                    IconButton(
-                        onClick = {
-                            if (recipe != null) {
-                                viewModel.updateFavoriteRecipe(id, recipe.favorite == null)
-                            }
-                        }
-                    ) {
-                        if (recipe != null) {
-                            if (recipe.favorite != null) {
-                                Icon(
-                                    Icons.Default.Favorite,
-                                    contentDescription = "Back",
-                                    tint = MaterialTheme.colorScheme.primary
-                                )
-                            } else {
-                                Icon(
-                                    Icons.Default.FavoriteBorder,
-                                    contentDescription = "Back",
-                                    tint = MaterialTheme.colorScheme.primary
-                                )
-                            }
-                        }
-                    }
-                }
-            )
+    when (val state = recipeState.value) {
+
+        is Resource.Loading -> {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                CircularProgressIndicator()
+            }
         }
-    ) { padding ->
 
-        Box(
-            modifier = Modifier.padding(padding)
-        ) {
+        is Resource.Error -> {
+            NotFoundLayout()
+        }
 
-            if (viewModel.loading.collectAsState().value) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize(),
-                    contentAlignment = Alignment.Center
-                ) {
-                    CircularProgressIndicator()
-                }
-                return@Box
-            }
+        is Resource.Success -> {
+            val recipe = state.data!!
+            Scaffold(
+                topBar = {
+                    TopAppBar(
+                        navigationIcon = {
+                            IconButton(
+                                onClick = {
+                                    navHostController.popBackStack()
+                                }
+                            ) {
+                                Icon(
+                                    Icons.AutoMirrored.Filled.ArrowBack,
+                                    contentDescription = "Back"
+                                )
+                            }
+                        },
+                        title = {
+                            Text("Detail Recipe")
+                        },
+                        actions = {
+                            IconButton(
+                                onClick = {
 
-            if (recipe == null) {
-                NotFoundLayout()
-                return@Box
-            }
-
-            LazyColumn {
-
-                item {
-                    Image(
-                        painter = rememberAsyncImagePainter(recipe.imageUrl),
-                        contentDescription = "Recipe Image",
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(250.dp),
-                        contentScale = ContentScale.Crop
+                                    viewModel.updateFavoriteRecipe(id, recipe.favorite == null)
+                                }
+                            ) {
+                                if (recipe.favorite != null) {
+                                    Icon(
+                                        Icons.Default.Favorite,
+                                        contentDescription = "Back",
+                                        tint = MaterialTheme.colorScheme.primary
+                                    )
+                                } else {
+                                    Icon(
+                                        Icons.Default.FavoriteBorder,
+                                        contentDescription = "Back",
+                                        tint = MaterialTheme.colorScheme.primary
+                                    )
+                                }
+                            }
+                        }
                     )
                 }
-                item {
+            ) { padding ->
+
+                Box(
+                    modifier = Modifier.padding(padding)
+                ) {
 
 
-                    Column(
-                        Modifier.padding(10.dp)
-                    ) {
-                        Text(text = recipe.title, style = MaterialTheme.typography.titleMedium)
-                        Spacer(modifier = Modifier.height(10.dp))
+                    LazyColumn {
 
-                        Box(
-                            Modifier.defaultMinSize(minHeight = 100.dp)
-                        ) {
-                            Text(
-                                recipe.description,
-                                style = MaterialTheme.typography.bodyMedium
+                        item {
+                            Image(
+                                painter = rememberAsyncImagePainter(recipe.imageUrl),
+                                contentDescription = "Recipe Image",
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .height(250.dp),
+                                contentScale = ContentScale.Crop
                             )
                         }
+                        item {
 
-                        Spacer(modifier = Modifier.height(10.dp))
-                        Text("Bahan:", style = MaterialTheme.typography.titleMedium)
+
+                            Column(
+                                Modifier.padding(10.dp)
+                            ) {
+                                Text(
+                                    text = recipe.title,
+                                    style = MaterialTheme.typography.titleMedium
+                                )
+                                Spacer(modifier = Modifier.height(10.dp))
+
+                                Box(
+                                    Modifier.defaultMinSize(minHeight = 100.dp)
+                                ) {
+                                    Text(
+                                        recipe.description,
+                                        style = MaterialTheme.typography.bodyMedium
+                                    )
+                                }
+
+                                Spacer(modifier = Modifier.height(10.dp))
+                                Text("Bahan:", style = MaterialTheme.typography.titleMedium)
+                            }
+                        }
+
+                        items(recipe.ingredients.size) {
+                            val number = it + 1
+                            Text(
+                                "• ${recipe.ingredients[it]}",
+                                style = MaterialTheme.typography.bodyMedium,
+                                modifier = Modifier.padding(horizontal = 10.dp)
+                            )
+                            Spacer(modifier = Modifier.height(10.dp))
+                        }
+
+
                     }
                 }
-
-                items(recipe.ingredients.size) {
-                    val number = it + 1
-                    Text(
-                        "• ${recipe.ingredients[it]}",
-                        style = MaterialTheme.typography.bodyMedium,
-                        modifier = Modifier.padding(horizontal = 10.dp)
-                    )
-                    Spacer(modifier = Modifier.height(10.dp))
-                }
-
-
             }
         }
     }
+
+
 }
 
 

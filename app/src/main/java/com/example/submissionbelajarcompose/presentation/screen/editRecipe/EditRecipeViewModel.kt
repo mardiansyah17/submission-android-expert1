@@ -46,24 +46,7 @@ class EditRecipeViewModel @Inject constructor(
     private val prevImage = mutableStateOf("")
 
     fun getRecipe(id: String) {
-        viewModelScope.launch {
-            loading.value = true
-            try {
-                val recipeResult = useCase.getRecipeById(id)
-                editRecipeUiInfo.value = EditRecipeUiInfo(
-                    title = recipeResult.title,
-                    createdAt = recipeResult.createdAt,
-                    description = recipeResult.description,
-                    imageUrl = recipeResult.imageUrl,
-                    ingredients = recipeResult.ingredients
-                )
-            } catch (e: Exception) {
-                Log.e(TAG, "getRecipe: ", e)
-            } finally {
-                loading.value = false
-
-            }
-        }
+        
     }
 
 

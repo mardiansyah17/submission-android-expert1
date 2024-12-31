@@ -41,7 +41,6 @@ fun HomeScreen(
     val stateRecipe = homeViewModel.recipes.collectAsState()
     val statePull = rememberPullToRefreshState()
     val isRefreshing = remember { mutableStateOf(false) }
-    val loading = homeViewModel.loading.collectAsState().value
 
 
     when (val state = stateRecipe.value) {

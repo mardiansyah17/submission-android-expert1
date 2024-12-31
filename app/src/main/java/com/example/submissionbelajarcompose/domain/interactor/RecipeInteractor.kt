@@ -6,6 +6,7 @@ import com.example.submissionbelajarcompose.domain.usecase.RecipeUseCase
 import com.example.submissionbelajarcompose.domain.model.Recipe
 import com.example.submissionbelajarcompose.domain.repository.IRecipeRepository
 import com.google.firebase.Timestamp
+import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Flowable
 
 class RecipeInteractor(
@@ -15,11 +16,11 @@ class RecipeInteractor(
         return repository.getRecipes()
     }
 
-    override suspend fun getRecipeById(id: String): Recipe {
+    override fun getRecipeById(id: String): Flowable<Resource<Recipe>> {
         return repository.getRecipeById(id)
     }
 
-    override suspend fun createRecipe(recipe: Recipe) {
+    override fun createRecipe(recipe: Recipe): Completable {
 
         if (recipe.title.isEmpty()) {
             throw IllegalArgumentException("Judul tidak boleh kosong")
@@ -34,7 +35,7 @@ class RecipeInteractor(
             throw IllegalArgumentException("Minimal 2 bahan")
         }
 
-        repository.createRecipe(recipe)
+        return repository.createRecipe(recipe)
     }
 
     override suspend fun updateRecipe(recipe: Recipe) {
@@ -57,7 +58,7 @@ class RecipeInteractor(
         repository.deleteRecipe(id)
     }
 
-    override suspend fun getFavoriteRecipes(): List<Recipe> {
+    override fun getFavoriteRecipes(): Flowable<Resource<List<Recipe>>> {
         return repository.getFavoriteRecipes()
     }
 

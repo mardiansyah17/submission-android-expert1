@@ -7,6 +7,7 @@ import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import io.reactivex.rxjava3.core.BackpressureStrategy
+import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Flowable
 import io.reactivex.rxjava3.schedulers.Schedulers
 import kotlinx.coroutines.tasks.await
@@ -35,28 +36,40 @@ class RecipeDataSource @Inject constructor(
         }, BackpressureStrategy.BUFFER).subscribeOn(Schedulers.io())
     }
 
-    override suspend fun getRecipeById(id: String): RecipeDto {
-        try {
-            val documentSnapshot = firestore.collection("recipes")
+    override fun getRecipeById(id: String): Flowable<Resource<RecipeDto>> {
+        return Flowable.create<Resource<RecipeDto>>({ emitter ->
+            firestore.collection("recipes")
                 .document(id)
                 .get()
-                .await()
-            return documentSnapshot.toObject(RecipeDto::class.java)!!
-        } catch (e: Exception) {
-            Log.e("RecipeDataSource", "Error get recipe by id: ${e.message}")
-            throw Exception("Error get recipe by id")
-        }
+                .addOnSuccessListener { documentSnapshot ->
+                    val recipe = documentSnapshot.toObject(RecipeDto::class.java)
+
+                    if (recipe != null) {
+                        emitter.onNext(Resource.Success(recipe.copy(id = documentSnapshot.id)))
+                        emitter.onComplete()
+                    } else {
+                        emitter.onNext(Resource.Error("Data tidak ditemukan", null))
+                        emitter.onComplete()
+                    }
+
+                }
+                .addOnFailureListener { exception ->
+                    emitter.onNext(Resource.Error(exception.message ?: "Ada kesalahan", null))
+                    emitter.onComplete()
+                }
+
+        }, BackpressureStrategy.BUFFER).subscribeOn(Schedulers.io())
     }
 
-    override suspend fun createRecipe(recipe: RecipeDto) {
-        try {
-            firestore.collection("recipes")
-                .add(recipe)
-                .await()
-        } catch (e: Exception) {
-            Log.e("RecipeDataSource", "Error create recipe: ${e.message}")
-            throw Exception("Error create recipe")
-        }
+    override fun createRecipe(recipe: RecipeDto): Completable = Completable.create { emitter ->
+        firestore.collection("recipes")
+            .add(recipe)
+            .addOnSuccessListener {
+                emitter.onComplete()
+            }
+            .addOnFailureListener {
+                emitter.onError(it)
+            }
     }
 
     override suspend fun updateRecipe(recipe: RecipeDto) {
@@ -84,23 +97,24 @@ class RecipeDataSource @Inject constructor(
         }
     }
 
-    override suspend fun getFavoriteRecipes(): List<RecipeDto> {
-        try {
-            val querySnapshot = firestore.collection("recipes")
-                .whereNotEqualTo("favorite", null)
-                .orderBy("favorite", Query.Direction.DESCENDING)
+    override fun getFavoriteRecipes(): Flowable<Resource<List<RecipeDto>>> {
+        return Flowable.create<Resource<List<RecipeDto>>>({ emitter ->
+            firestore.collection("recipes")
+                .whereEqualTo("favorite", null)
                 .get()
-                .await()
-            val mapData = querySnapshot.documents.map { document ->
-                document.toObject(RecipeDto::class.java)!!
-                    .copy(id = document.id)
-
-            }
-            return mapData
-        } catch (e: Exception) {
-            Log.e("RecipeDataSource", "Error getting favorite recipes: ${e.message}")
-            throw Exception("Error getting favorite recipes")
-        }
+                .addOnSuccessListener { querySnapshot ->
+                    val mapData = querySnapshot.documents.map { document ->
+                        document.toObject(RecipeDto::class.java)!!
+                            .copy(id = document.id)
+                    }
+                    emitter.onNext(Resource.Success(mapData.map { it }))
+                    emitter.onComplete()
+                }
+                .addOnFailureListener { exception ->
+                    emitter.onNext(Resource.Error(exception.message ?: "Ada kesalahan", null))
+                    emitter.onComplete()
+                }
+        }, BackpressureStrategy.BUFFER).subscribeOn(Schedulers.io())
     }
 
     override suspend fun setFavoriteRecipe(id: String, favorite: Timestamp?) {

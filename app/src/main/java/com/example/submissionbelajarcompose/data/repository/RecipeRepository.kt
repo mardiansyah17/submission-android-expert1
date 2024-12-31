@@ -8,6 +8,7 @@ import com.example.submissionbelajarcompose.domain.repository.IRecipeRepository
 import com.example.submissionbelajarcompose.domain.model.Recipe
 import com.example.submissionbelajarcompose.domain.model.toDto
 import com.google.firebase.Timestamp
+import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Flowable
 
 class RecipeRepository(
@@ -26,14 +27,20 @@ class RecipeRepository(
             }
     }
 
-    override suspend fun getRecipeById(id: String): Recipe {
-        val recipeDto = recipeDataSource.getRecipeById(id)
-        return recipeDto.toDomain()
+    override fun getRecipeById(id: String): Flowable<Resource<Recipe>> {
+        return recipeDataSource.getRecipeById(id)
+            .map { resource ->
+                when (resource) {
+                    is Resource.Success -> Resource.Success(resource.data!!.toDomain())
+                    is Resource.Loading -> Resource.Loading()
+                    is Resource.Error -> Resource.Error(resource.message ?: "Error")
+                }
+            }
     }
 
-    override suspend fun createRecipe(recipe: Recipe) {
+    override fun createRecipe(recipe: Recipe): Completable =
         recipeDataSource.createRecipe(recipe.toDto())
-    }
+
 
     override suspend fun updateRecipe(recipe: Recipe) {
         recipeDataSource.updateRecipe(recipe.toDto())
@@ -43,8 +50,17 @@ class RecipeRepository(
         recipeDataSource.deleteRecipe(id)
     }
 
-    override suspend fun getFavoriteRecipes(): List<Recipe> {
-        return recipeDataSource.getFavoriteRecipes().map { it.toDomain() }
+    override fun getFavoriteRecipes(): Flowable<Resource<List<Recipe>>> {
+        return recipeDataSource.getFavoriteRecipes()
+            .map { resource ->
+                when (resource) {
+                    is Resource.Success -> Resource.Success(resource.data?.map { it.toDomain() }
+                        ?: emptyList())
+
+                    is Resource.Loading -> Resource.Loading()
+                    is Resource.Error -> Resource.Error(resource.message ?: "Error")
+                }
+            }
     }
 
     override suspend fun setFavoriteRecipe(id: String, favorite: Timestamp?) {

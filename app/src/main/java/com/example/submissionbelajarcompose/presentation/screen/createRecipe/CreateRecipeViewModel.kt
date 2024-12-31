@@ -12,6 +12,8 @@ import com.google.firebase.Timestamp
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.storage.storage
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.schedulers.Schedulers
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
@@ -91,8 +93,17 @@ class CreateRecipeViewModel @Inject constructor(
                                 titleLower = recipe.title.lowercase(),
                             )
                         )
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe({
+                                successMsg.value = "Berhasil menambahkan resep"
+                            },
+                                {
+                                    errorMsg.value =
+                                        it.message ?: "Gagal menambahkan resep silahkan coba lagi"
+                                }
+                            )
 
-                        successMsg.value = "Berhasil menambahkan resep"
 
                     } catch (e: Exception) {
                         Log.e(TAG, "createRecipe: ", e)

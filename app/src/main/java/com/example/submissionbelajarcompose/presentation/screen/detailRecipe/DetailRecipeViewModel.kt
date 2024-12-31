@@ -3,10 +3,12 @@ package com.example.submissionbelajarcompose.presentation.screen.detailRecipe
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.submissionbelajarcompose.data.Resource
 import com.example.submissionbelajarcompose.domain.model.Recipe
 import com.example.submissionbelajarcompose.domain.usecase.RecipeUseCase
 import com.google.firebase.Timestamp
 import dagger.hilt.android.lifecycle.HiltViewModel
+import io.reactivex.rxjava3.disposables.CompositeDisposable
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -16,25 +18,27 @@ import javax.inject.Inject
 class DetailRecipeViewModel @Inject constructor(
     private val recipeUseCase: RecipeUseCase
 ) : ViewModel() {
-    private val _recipe = MutableStateFlow<Recipe?>(null)
-    val recipe: StateFlow<Recipe?> = _recipe
+    private val _recipe = MutableStateFlow<Resource<Recipe>>(Resource.Loading())
+    val recipe: StateFlow<Resource<Recipe>> = _recipe
 
-    private val _loading = MutableStateFlow(false)
-    val loading: StateFlow<Boolean> = _loading
+
+    private val compositeDisposable = CompositeDisposable()
+
 
     fun getRecipe(id: String) {
-        viewModelScope.launch {
-            _loading.value = true
-            try {
-                val recipeResult = recipeUseCase.getRecipeById(id)
+        val disposable = recipeUseCase.getRecipeById(id)
+            .subscribe({
+                _recipe.value = it
+            }, {
+                _recipe.value = Resource.Error(it.localizedMessage ?: "Unknown error")
+            })
 
-                _recipe.value = recipeResult
-            } catch (e: Exception) {
-                Log.e(TAG, "getRecipe: ${e.message}")
-            } finally {
-                _loading.value = false
-            }
-        }
+        compositeDisposable.add(disposable)
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        compositeDisposable.clear()
     }
 
     fun updateFavoriteRecipe(id: String, isFavorite: Boolean) {
@@ -46,7 +50,7 @@ class DetailRecipeViewModel @Inject constructor(
                     null
                 }
                 recipeUseCase.setFavoriteRecipe(id = id, favorite = favorit)
-                _recipe.value = recipe.value?.copy(favorite = favorit)
+//                _recipe.value = recipe.value.copy(favorite = favorit)
 
             } catch (e: Exception) {
                 Log.e(TAG, "updateFavoriteRecipe: ${e.message}")
