@@ -1,10 +1,12 @@
 package com.example.submissionbelajarcompose.data.source
 
+import com.example.submissionbelajarcompose.data.Resource
 import com.example.submissionbelajarcompose.data.model.RecipeDto
 import com.google.firebase.Timestamp
+import io.reactivex.rxjava3.core.Flowable
 
 interface IRecipeDataSource {
-    suspend fun getRecipesFromFirebase(): List<RecipeDto>
+    fun getRecipesFromFirebase(): Flowable<Resource<List<RecipeDto>>>
     suspend fun getRecipeById(id: String): RecipeDto
     suspend fun createRecipe(recipe: RecipeDto)
     suspend fun updateRecipe(recipe: RecipeDto)

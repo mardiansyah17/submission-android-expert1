@@ -1,15 +1,17 @@
 package com.example.submissionbelajarcompose.domain.interactor
 
 import android.util.Log
+import com.example.submissionbelajarcompose.data.Resource
 import com.example.submissionbelajarcompose.domain.usecase.RecipeUseCase
 import com.example.submissionbelajarcompose.domain.model.Recipe
 import com.example.submissionbelajarcompose.domain.repository.IRecipeRepository
 import com.google.firebase.Timestamp
+import io.reactivex.rxjava3.core.Flowable
 
 class RecipeInteractor(
     private val repository: IRecipeRepository
 ) : RecipeUseCase {
-    override suspend fun getRecipes(): List<Recipe> {
+    override fun getRecipes(): Flowable<Resource<List<Recipe>>> {
         return repository.getRecipes()
     }
 

@@ -1,28 +1,38 @@
 package com.example.submissionbelajarcompose.data.source
 
 import android.util.Log
+import com.example.submissionbelajarcompose.data.Resource
 import com.example.submissionbelajarcompose.data.model.RecipeDto
-import com.example.submissionbelajarcompose.domain.model.Recipe
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
+import io.reactivex.rxjava3.core.BackpressureStrategy
+import io.reactivex.rxjava3.core.Flowable
+import io.reactivex.rxjava3.schedulers.Schedulers
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
 class RecipeDataSource @Inject constructor(
     private val firestore: FirebaseFirestore
 ) : IRecipeDataSource {
-    override suspend fun getRecipesFromFirebase(): List<RecipeDto> {
-        val querySnapshot = firestore.collection("recipes")
-            .orderBy("createdAt", Query.Direction.DESCENDING)
-            .get()
-            .await()
-        val mapData = querySnapshot.documents.map { document ->
-            document.toObject(RecipeDto::class.java)!!
-                .copy(id = document.id)
-
-        }
-        return mapData
+    override fun getRecipesFromFirebase(): Flowable<Resource<List<RecipeDto>>> {
+        return Flowable.create<Resource<List<RecipeDto>>>({ emitter ->
+            firestore.collection("recipes")
+                .orderBy("createdAt", Query.Direction.DESCENDING)
+                .get()
+                .addOnSuccessListener { querySnapshot ->
+                    val mapData = querySnapshot.documents.map { document ->
+                        document.toObject(RecipeDto::class.java)!!
+                            .copy(id = document.id)
+                    }
+                    emitter.onNext(Resource.Success(mapData.map { it }))
+                    emitter.onComplete()
+                }
+                .addOnFailureListener { exception ->
+                    emitter.onNext(Resource.Error(exception.message ?: "Ada kesalahan", null))
+                    emitter.onComplete()
+                }
+        }, BackpressureStrategy.BUFFER).subscribeOn(Schedulers.io())
     }
 
     override suspend fun getRecipeById(id: String): RecipeDto {

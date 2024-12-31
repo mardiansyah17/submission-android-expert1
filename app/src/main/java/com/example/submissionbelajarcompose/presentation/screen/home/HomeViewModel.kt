@@ -4,11 +4,14 @@ import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.submissionbelajarcompose.data.Resource
 import com.example.submissionbelajarcompose.domain.model.Recipe
 import com.example.submissionbelajarcompose.domain.usecase.RecipeUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.storage.storage
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.disposables.CompositeDisposable
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -22,8 +25,8 @@ class HomeViewModel @Inject constructor(
 
 ) : ViewModel() {
 
-    private val _recipes = MutableStateFlow<List<Recipe>>(emptyList())
-    val recipes: StateFlow<List<Recipe>> = _recipes
+    private val _recipes = MutableStateFlow<Resource<List<Recipe>>>(Resource.Loading())
+    val recipes: StateFlow<Resource<List<Recipe>>> = _recipes
 
 
     private val _loading = MutableStateFlow(false)
@@ -31,24 +34,27 @@ class HomeViewModel @Inject constructor(
 
     val query = mutableStateOf("")
 
+    private val compositeDisposable = CompositeDisposable()
+
     init {
         getRecipes()
     }
 
     fun getRecipes() {
+        val disposable = recipeUseCase.getRecipes()
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                _recipes.value = it
+            }, {
+                _recipes.value = Resource.Error(it.localizedMessage ?: "Unknown error")
+            })
 
-        viewModelScope.launch {
+        compositeDisposable.add(disposable)
+    }
 
-            _loading.value = true
-            try {
-                val recipesResult = recipeUseCase.getRecipes()
-                _recipes.value = recipesResult
-            } catch (e: Exception) {
-                Log.e(TAG, "getRecipes: ", e)
-            } finally {
-                _loading.value = false
-            }
-        }
+    override fun onCleared() {
+        super.onCleared()
+        compositeDisposable.clear()
     }
 
     fun deleteRecipe(id: String, urlImage: String) {
@@ -69,7 +75,7 @@ class HomeViewModel @Inject constructor(
             _loading.value = true
             try {
                 val recipesResult = recipeUseCase.searchRecipes(text)
-                _recipes.value = recipesResult
+//                _recipes.value = recipesResult
             } catch (e: Exception) {
                 Log.e(TAG, "searchRecipe: ", e)
             } finally {

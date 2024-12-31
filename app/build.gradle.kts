@@ -98,7 +98,7 @@ dependencies {
     implementation(libs.androidx.constraintlayout.compose)
     implementation(libs.coil.compose)
     implementation(libs.lottie.compose)
-    
+
     implementation(platform(libs.supabase.bom))
     implementation(libs.postgrest.kt)
     implementation(libs.storage.kt)
@@ -106,5 +106,8 @@ dependencies {
     implementation(libs.ktor.client.core)
     implementation(libs.ktor.client.cio)
 
-
+    implementation(libs.rxjava)
+    implementation(libs.rxandroid)
+    implementation(libs.adapter.rxjava3)
+    implementation(libs.androidx.lifecycle.reactivestreams.ktx)
 }

@@ -19,7 +19,10 @@ firebaseStorage = "21.0.1"
 compose = "1.4.0-alpha04"
 constraintlayoutCompose = "1.1.0"
 lottieCompose = "5.0.3"
-
+rxjava = "3.1.9"
+rxandroid = "3.0.2"
+adapterRxjava3 = "2.9.0"
+lifecycleReactivestreamsKtx = "2.8.4"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -50,6 +53,12 @@ lottie-compose = { module = "com.airbnb.android:lottie-compose", version.ref = "
 postgrest-kt = { module = "io.github.jan-tennert.supabase:postgrest-kt" }
 storage-kt = { module = "io.github.jan-tennert.supabase:storage-kt" }
 supabase-bom = { module = "io.github.jan-tennert.supabase:bom", version = "3.0.0" }
+
+rxjava = { module = "io.reactivex.rxjava3:rxjava", version.ref = "rxjava" }
+rxandroid = { module = "io.reactivex.rxjava3:rxandroid", version.ref = "rxandroid" }
+adapter-rxjava3 = { module = "com.squareup.retrofit2:adapter-rxjava3", version.ref = "adapterRxjava3" }
+androidx-lifecycle-reactivestreams-ktx = { module = "androidx.lifecycle:lifecycle-reactivestreams-ktx", version.ref = "lifecycleReactivestreamsKtx" }
+
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
