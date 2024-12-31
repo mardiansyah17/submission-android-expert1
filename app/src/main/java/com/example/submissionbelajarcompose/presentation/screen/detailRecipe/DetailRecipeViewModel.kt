@@ -8,7 +8,9 @@ import com.example.submissionbelajarcompose.domain.model.Recipe
 import com.example.submissionbelajarcompose.domain.usecase.RecipeUseCase
 import com.google.firebase.Timestamp
 import dagger.hilt.android.lifecycle.HiltViewModel
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.disposables.CompositeDisposable
+import io.reactivex.rxjava3.schedulers.Schedulers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -43,18 +45,21 @@ class DetailRecipeViewModel @Inject constructor(
 
     fun updateFavoriteRecipe(id: String, isFavorite: Boolean) {
         viewModelScope.launch {
-            try {
-                val favorit = if (isFavorite) {
-                    Timestamp.now()
-                } else {
-                    null
-                }
-                recipeUseCase.setFavoriteRecipe(id = id, favorite = favorit)
-//                _recipe.value = recipe.value.copy(favorite = favorit)
-
-            } catch (e: Exception) {
-                Log.e(TAG, "updateFavoriteRecipe: ${e.message}")
+            val favorit = if (isFavorite) {
+                Timestamp.now()
+            } else {
+                null
             }
+            recipeUseCase.setFavoriteRecipe(id = id, favorite = favorit)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({
+                    _recipe.value = _recipe.value.data!!.copy(favorite = favorit).let {
+                        Resource.Success(it)
+                    }
+                }, {
+                    Log.e(TAG, "updateFavoriteRecipe: Error", it)
+                })
         }
     }
 

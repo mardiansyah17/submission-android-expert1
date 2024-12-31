@@ -1,5 +1,6 @@
 package com.example.submissionbelajarcompose.presentation.screen.detailRecipe
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -89,7 +90,6 @@ fun DetailRecipeScreen(
                         actions = {
                             IconButton(
                                 onClick = {
-
                                     viewModel.updateFavoriteRecipe(id, recipe.favorite == null)
                                 }
                             ) {

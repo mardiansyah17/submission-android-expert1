@@ -38,7 +38,7 @@ class FavoriteViewModel @Inject constructor(
     }
 
     fun getFavoriteRecipes() {
-        val disposable = useCase.getRecipes()
+        val disposable = useCase.getFavoriteRecipes()
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
                 _recipes.value = it

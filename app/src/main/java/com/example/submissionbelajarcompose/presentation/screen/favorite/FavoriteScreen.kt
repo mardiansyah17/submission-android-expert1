@@ -67,6 +67,8 @@ fun FavoriteScreen(
                     verticalArrangement = Arrangement.spacedBy(10.dp),
                     modifier = Modifier
                         .padding(horizontal = 10.dp)
+                        .padding(top = 10.dp)
+                        .fillMaxSize()
 
                 ) {
 

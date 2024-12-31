@@ -101,7 +101,7 @@ class RecipeDataSource @Inject constructor(
     override fun getFavoriteRecipes(): Flowable<Resource<List<RecipeDto>>> {
         return Flowable.create<Resource<List<RecipeDto>>>({ emitter ->
             firestore.collection("recipes")
-                .whereEqualTo("favorite", null)
+                .whereNotEqualTo("favorite", null)
                 .get()
                 .addOnSuccessListener { querySnapshot ->
                     val mapData = querySnapshot.documents.map { document ->
