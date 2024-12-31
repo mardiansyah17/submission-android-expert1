@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
@@ -19,6 +20,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -41,7 +43,7 @@ fun HomeScreen(
     val stateRecipe = homeViewModel.recipes.collectAsState()
     val statePull = rememberPullToRefreshState()
     val isRefreshing = remember { mutableStateOf(false) }
-
+    val loading = homeViewModel.loading.collectAsState()
 
     when (val state = stateRecipe.value) {
         is Resource.Loading -> {
@@ -127,6 +129,23 @@ fun HomeScreen(
                     }
                 }
 
+            }
+
+
+            if (loading.value) {
+                Surface(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .alpha(0.5f),
+                ) {
+                    Column(
+                        modifier = Modifier.fillMaxSize(),
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        CircularProgressIndicator()
+                    }
+                }
             }
 
         }

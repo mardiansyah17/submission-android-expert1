@@ -10,10 +10,10 @@ interface IRecipeDataSource {
     fun getRecipesFromFirebase(): Flowable<Resource<List<RecipeDto>>>
     fun getRecipeById(id: String): Flowable<Resource<RecipeDto>>
     fun createRecipe(recipe: RecipeDto): Completable
-    suspend fun updateRecipe(recipe: RecipeDto)
-    suspend fun deleteRecipe(id: String)
+    fun updateRecipe(recipe: RecipeDto): Completable
+    fun deleteRecipe(id: String): Completable
     fun getFavoriteRecipes(): Flowable<Resource<List<RecipeDto>>>
-    suspend fun setFavoriteRecipe(id: String, favorite: Timestamp?)
-    suspend fun searchRecipes(query: String): List<RecipeDto>
+    fun setFavoriteRecipe(id: String, favorite: Timestamp?): Completable
+    fun searchRecipes(query: String): Flowable<Resource<List<RecipeDto>>>
 
 }

@@ -12,6 +12,7 @@ import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.storage.storage
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.disposables.CompositeDisposable
+import io.reactivex.rxjava3.schedulers.Schedulers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -41,10 +42,13 @@ class HomeViewModel @Inject constructor(
     }
 
     fun getRecipes() {
+        _loading.value = true
         val disposable = recipeUseCase.getRecipes()
+            .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
                 _recipes.value = it
+                _loading.value = false
             }, {
                 _recipes.value = Resource.Error(it.localizedMessage ?: "Unknown error")
             })
@@ -58,12 +62,20 @@ class HomeViewModel @Inject constructor(
     }
 
     fun deleteRecipe(id: String, urlImage: String) {
+        _loading.value = true
         viewModelScope.launch {
             try {
                 val bucket = supabaseClient.storage.from("recipe")
                 bucket.delete(listOf(urlImage.substringAfter("recipe/")))
                 recipeUseCase.deleteRecipe(id)
-                getRecipes()
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe({
+                        getRecipes()
+                        _loading.value = false
+                    }, {
+                        Log.e(TAG, "deleteRecipe: ", it)
+                    })
             } catch (e: Exception) {
                 Log.e(TAG, "deleteRecipe: ", e)
             }
@@ -71,17 +83,16 @@ class HomeViewModel @Inject constructor(
     }
 
     fun searchRecipe(text: String) {
-        viewModelScope.launch {
-            _loading.value = true
-            try {
-                val recipesResult = recipeUseCase.searchRecipes(text)
-//                _recipes.value = recipesResult
-            } catch (e: Exception) {
-                Log.e(TAG, "searchRecipe: ", e)
-            } finally {
-                _loading.value = false
-            }
-        }
+        val disposable = recipeUseCase.searchRecipes(text)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                _recipes.value = it
+            }, {
+                _recipes.value = Resource.Error(it.localizedMessage ?: "Unknown error")
+            })
+
+        compositeDisposable.add(disposable)
     }
 
 

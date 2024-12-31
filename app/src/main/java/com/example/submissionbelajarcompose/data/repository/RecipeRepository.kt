@@ -42,12 +42,12 @@ class RecipeRepository(
         recipeDataSource.createRecipe(recipe.toDto())
 
 
-    override suspend fun updateRecipe(recipe: Recipe) {
-        recipeDataSource.updateRecipe(recipe.toDto())
+    override fun updateRecipe(recipe: Recipe): Completable {
+        return recipeDataSource.updateRecipe(recipe.toDto())
     }
 
-    override suspend fun deleteRecipe(id: String) {
-        recipeDataSource.deleteRecipe(id)
+    override fun deleteRecipe(id: String): Completable {
+        return recipeDataSource.deleteRecipe(id)
     }
 
     override fun getFavoriteRecipes(): Flowable<Resource<List<Recipe>>> {
@@ -63,12 +63,20 @@ class RecipeRepository(
             }
     }
 
-    override suspend fun setFavoriteRecipe(id: String, favorite: Timestamp?) {
-        recipeDataSource.setFavoriteRecipe(id, favorite)
+    override fun setFavoriteRecipe(id: String, favorite: Timestamp?): Completable {
+        return recipeDataSource.setFavoriteRecipe(id, favorite)
     }
 
-    override suspend fun searchRecipes(query: String): List<Recipe> {
-        val recipesDto = recipeDataSource.searchRecipes(query)
-        return recipesDto.map { it.toDomain() }
+    override fun searchRecipes(query: String): Flowable<Resource<List<Recipe>>> {
+        return recipeDataSource.searchRecipes(query)
+            .map { resource ->
+                when (resource) {
+                    is Resource.Success -> Resource.Success(resource.data?.map { it.toDomain() }
+                        ?: emptyList())
+
+                    is Resource.Loading -> Resource.Loading()
+                    is Resource.Error -> Resource.Error(resource.message ?: "Error")
+                }
+            }
     }
 }

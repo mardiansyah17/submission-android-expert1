@@ -31,6 +31,8 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
+import coil.ImageLoader
+import coil.compose.AsyncImage
 import coil.compose.rememberAsyncImagePainter
 
 @Composable
@@ -68,14 +70,16 @@ fun CardRecipe(
             }
     ) {
         Row {
-            Image(
-                painter = rememberAsyncImagePainter(imageUrl),
+            AsyncImage(
+                model = imageUrl,
+                
                 contentDescription = "Recipe Image",
                 modifier = Modifier
                     .width(125.dp)
                     .fillMaxHeight(),
-                contentScale = ContentScale.Crop
-            )
+                contentScale = ContentScale.Crop,
+
+                )
             Column {
                 Text(
                     title,

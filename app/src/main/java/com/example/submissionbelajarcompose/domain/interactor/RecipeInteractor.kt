@@ -38,7 +38,7 @@ class RecipeInteractor(
         return repository.createRecipe(recipe)
     }
 
-    override suspend fun updateRecipe(recipe: Recipe) {
+    override fun updateRecipe(recipe: Recipe): Completable {
         if (recipe.title.isEmpty()) {
             throw IllegalArgumentException("Judul tidak boleh kosong")
         }
@@ -51,22 +51,22 @@ class RecipeInteractor(
         if (recipe.ingredients.filter { it.isNotEmpty() }.size < 2) {
             throw IllegalArgumentException("Minimal 2 bahan")
         }
-        repository.updateRecipe(recipe)
+        return repository.updateRecipe(recipe)
     }
 
-    override suspend fun deleteRecipe(id: String) {
-        repository.deleteRecipe(id)
+    override fun deleteRecipe(id: String): Completable {
+        return repository.deleteRecipe(id)
     }
 
     override fun getFavoriteRecipes(): Flowable<Resource<List<Recipe>>> {
         return repository.getFavoriteRecipes()
     }
 
-    override suspend fun setFavoriteRecipe(id: String, favorite: Timestamp?) {
-        repository.setFavoriteRecipe(id, favorite)
+    override fun setFavoriteRecipe(id: String, favorite: Timestamp?): Completable {
+        return repository.setFavoriteRecipe(id, favorite)
     }
 
-    override suspend fun searchRecipes(query: String): List<Recipe> {
+    override fun searchRecipes(query: String): Flowable<Resource<List<Recipe>>> {
         return repository.searchRecipes(query)
     }
 

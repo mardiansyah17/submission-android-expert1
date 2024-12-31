@@ -6,12 +6,16 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.core.net.toUri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.submissionbelajarcompose.data.Resource
 import com.example.submissionbelajarcompose.domain.model.Recipe
 import com.example.submissionbelajarcompose.domain.usecase.RecipeUseCase
 import com.google.firebase.Timestamp
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.storage.storage
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.disposables.CompositeDisposable
+import io.reactivex.rxjava3.schedulers.Schedulers
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
@@ -45,8 +49,31 @@ class EditRecipeViewModel @Inject constructor(
     val loading = mutableStateOf(false)
     private val prevImage = mutableStateOf("")
 
+    private val compositeDisposable = CompositeDisposable()
+
     fun getRecipe(id: String) {
-        
+        val disposable = useCase.getRecipeById(id)
+            .subscribe({
+                if (it is Resource.Loading) {
+                    Log.d(TAG, "getRecipe: Loading")
+                    loading.value = true
+                    return@subscribe
+                }
+                Log.d(TAG, "getRecipe: Success")
+                loading.value = false
+                val recipe = it.data!!
+                editRecipeUiInfo.value = EditRecipeUiInfo(
+                    title = recipe.title,
+                    createdAt = recipe.createdAt,
+                    description = recipe.description,
+                    imageUrl = recipe.imageUrl,
+                    ingredients = recipe.ingredients + listOf("")
+                )
+            }, {
+                errorMsg.value = it.localizedMessage ?: "Unknown error"
+            })
+
+        compositeDisposable.add(disposable)
     }
 
 
@@ -109,8 +136,17 @@ class EditRecipeViewModel @Inject constructor(
 
                             )
                         )
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe({
+                                successMsg.value = "Berhasil menambahkan resep"
+                            },
+                                {
+                                    errorMsg.value =
+                                        it.message ?: "Gagal menambahkan resep silahkan coba lagi"
+                                }
+                            )
 
-                        successMsg.value = "Berhasil menambahkan resep"
 
                     } catch (e: Exception) {
                         Log.e(TAG, "createRecipe: ", e)
