@@ -23,7 +23,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
-import com.example.submissionbelajarcompose.data.Resource
+import com.example.core.data.Resource
 import com.example.submissionbelajarcompose.presentation.components.AppButton
 import com.example.submissionbelajarcompose.presentation.components.CardRecipe
 import com.example.submissionbelajarcompose.presentation.components.EmptyLayout

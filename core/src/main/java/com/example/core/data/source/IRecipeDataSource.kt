@@ -1,7 +1,7 @@
-package com.example.submissionbelajarcompose.data.source
+package com.example.core.data.source
 
-import com.example.submissionbelajarcompose.data.Resource
-import com.example.submissionbelajarcompose.data.model.RecipeDto
+import com.example.core.data.Resource
+import com.example.core.data.model.RecipeDto
 import com.google.firebase.Timestamp
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Flowable

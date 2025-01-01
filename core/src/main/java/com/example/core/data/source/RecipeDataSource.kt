@@ -1,8 +1,7 @@
-package com.example.submissionbelajarcompose.data.source
+package com.example.core.data.source
 
-import android.util.Log
-import com.example.submissionbelajarcompose.data.Resource
-import com.example.submissionbelajarcompose.data.model.RecipeDto
+import com.example.core.data.Resource
+import com.example.core.data.model.RecipeDto
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
@@ -10,7 +9,6 @@ import io.reactivex.rxjava3.core.BackpressureStrategy
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Flowable
 import io.reactivex.rxjava3.schedulers.Schedulers
-import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
 class RecipeDataSource @Inject constructor(

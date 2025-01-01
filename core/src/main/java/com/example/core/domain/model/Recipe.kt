@@ -1,6 +1,6 @@
-package com.example.submissionbelajarcompose.domain.model
+package com.example.core.domain.model
 
-import com.example.submissionbelajarcompose.data.model.RecipeDto
+import com.example.core.data.model.RecipeDto
 import com.google.firebase.Timestamp
 
 data class Recipe(

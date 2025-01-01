@@ -1,13 +1,13 @@
-import java.util.Properties
-
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.google.gms.google.services)
-    id("kotlin-kapt")
-    alias(libs.plugins.hilt.android)
+
     alias(libs.plugins.compose.compiler)
     kotlin("plugin.serialization") version "2.0.21"
+    id("kotlin-kapt")
+    alias(libs.plugins.hilt.android)
+
 }
 
 android {
@@ -25,16 +25,7 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
-        val keystoreFile = project.rootProject.file("local.properties")
-        val properties = Properties()
-        properties.load(keystoreFile.inputStream())
 
-        buildConfigField("String", "SUPABASE_URL", properties.getProperty("supabaseUrl") ?: "")
-        buildConfigField(
-            "String",
-            "SUPABASE_ANON_KEY",
-            properties.getProperty("supabaseAnonKey") ?: ""
-        )
     }
 
     buildTypes {
@@ -67,12 +58,11 @@ android {
     }
 }
 
-kapt {
-    correctErrorTypes = true
-}
+
 
 dependencies {
     implementation(project(":core"))
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -81,8 +71,7 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
-    implementation(libs.firebase.firestore)
-    implementation(libs.firebase.storage)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -91,20 +80,21 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
-    implementation(libs.hilt.android)
-    kapt(libs.hilt.android.compiler)
-    implementation(libs.androidx.hilt.navigation.compose)
+
     implementation(libs.material.icons.extended)
     implementation(libs.androidx.constraintlayout.compose)
     implementation(libs.coil.compose)
     implementation(libs.lottie.compose)
 
+    implementation(libs.hilt.android)
+    kapt(libs.hilt.android.compiler)
+
+
+    implementation(libs.androidx.hilt.navigation.compose)
+
     implementation(platform(libs.supabase.bom))
     implementation(libs.postgrest.kt)
     implementation(libs.storage.kt)
-
-    implementation(libs.ktor.client.core)
-    implementation(libs.ktor.client.cio)
 
     implementation(libs.rxjava)
     implementation(libs.rxandroid)

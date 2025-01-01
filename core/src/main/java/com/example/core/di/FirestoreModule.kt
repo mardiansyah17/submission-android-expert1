@@ -1,4 +1,4 @@
-package com.example.submissionbelajarcompose.di
+package com.example.core.di
 
 import com.google.firebase.firestore.FirebaseFirestore
 import dagger.Module

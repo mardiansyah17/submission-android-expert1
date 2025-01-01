@@ -4,9 +4,9 @@ import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.submissionbelajarcompose.data.Resource
-import com.example.submissionbelajarcompose.domain.model.Recipe
-import com.example.submissionbelajarcompose.domain.usecase.RecipeUseCase
+import com.example.core.data.Resource
+import com.example.core.domain.model.Recipe
+import com.example.core.domain.usecase.RecipeUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.storage.storage

@@ -1,12 +1,11 @@
-package com.example.submissionbelajarcompose.data.repository
+package com.example.core.data.repository
 
-import android.util.Log
-import com.example.submissionbelajarcompose.data.Resource
-import com.example.submissionbelajarcompose.data.model.toDomain
-import com.example.submissionbelajarcompose.data.source.IRecipeDataSource
-import com.example.submissionbelajarcompose.domain.repository.IRecipeRepository
-import com.example.submissionbelajarcompose.domain.model.Recipe
-import com.example.submissionbelajarcompose.domain.model.toDto
+import com.example.core.data.Resource
+import com.example.core.data.model.toDomain
+import com.example.core.data.source.IRecipeDataSource
+import com.example.core.domain.model.Recipe
+import com.example.core.domain.model.toDto
+import com.example.core.domain.repository.IRecipeRepository
 import com.google.firebase.Timestamp
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Flowable

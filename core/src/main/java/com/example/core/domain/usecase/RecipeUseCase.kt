@@ -1,7 +1,7 @@
-package com.example.submissionbelajarcompose.domain.usecase
+package com.example.core.domain.usecase
 
-import com.example.submissionbelajarcompose.data.Resource
-import com.example.submissionbelajarcompose.domain.model.Recipe
+import com.example.core.data.Resource
+import com.example.core.domain.model.Recipe
 import com.google.firebase.Timestamp
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Flowable

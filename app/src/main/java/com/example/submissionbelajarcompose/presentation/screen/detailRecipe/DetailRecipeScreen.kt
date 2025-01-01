@@ -33,7 +33,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
-import com.example.submissionbelajarcompose.data.Resource
+import com.example.core.data.Resource
 import com.example.submissionbelajarcompose.presentation.components.NotFoundLayout
 
 @OptIn(ExperimentalMaterial3Api::class)

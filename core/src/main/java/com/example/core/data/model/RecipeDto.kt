@@ -1,6 +1,6 @@
-package com.example.submissionbelajarcompose.data.model
+package com.example.core.data.model
 
-import com.example.submissionbelajarcompose.domain.model.Recipe
+import com.example.core.domain.model.Recipe
 import com.google.firebase.Timestamp
 import java.util.Locale
 

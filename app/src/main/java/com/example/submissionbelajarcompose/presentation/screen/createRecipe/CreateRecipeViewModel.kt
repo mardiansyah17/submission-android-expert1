@@ -6,8 +6,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.core.net.toUri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.submissionbelajarcompose.domain.model.Recipe
-import com.example.submissionbelajarcompose.domain.usecase.RecipeUseCase
+import com.example.core.domain.model.Recipe
+import com.example.core.domain.usecase.RecipeUseCase
 import com.google.firebase.Timestamp
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.github.jan.supabase.SupabaseClient

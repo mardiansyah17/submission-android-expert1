@@ -1,7 +1,6 @@
 package com.example.submissionbelajarcompose.presentation.components
 
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
@@ -31,9 +30,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
-import coil.ImageLoader
 import coil.compose.AsyncImage
-import coil.compose.rememberAsyncImagePainter
 
 @Composable
 fun CardRecipe(
@@ -72,7 +69,7 @@ fun CardRecipe(
         Row {
             AsyncImage(
                 model = imageUrl,
-                
+
                 contentDescription = "Recipe Image",
                 modifier = Modifier
                     .width(125.dp)

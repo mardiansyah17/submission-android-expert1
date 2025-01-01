@@ -1,6 +1,6 @@
-package com.example.submissionbelajarcompose.di
+package com.example.core.di
 
-import com.example.submissionbelajarcompose.BuildConfig
+import com.example.core.BuildConfig
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

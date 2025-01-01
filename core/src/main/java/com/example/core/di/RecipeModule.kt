@@ -1,11 +1,11 @@
-package com.example.submissionbelajarcompose.di
+package com.example.core.di
 
-import com.example.submissionbelajarcompose.data.source.IRecipeDataSource
-import com.example.submissionbelajarcompose.data.source.RecipeDataSource
-import com.example.submissionbelajarcompose.data.repository.RecipeRepository
-import com.example.submissionbelajarcompose.domain.repository.IRecipeRepository
-import com.example.submissionbelajarcompose.domain.interactor.RecipeInteractor
-import com.example.submissionbelajarcompose.domain.usecase.RecipeUseCase
+import com.example.core.data.repository.RecipeRepository
+import com.example.core.data.source.IRecipeDataSource
+import com.example.core.data.source.RecipeDataSource
+import com.example.core.domain.repository.IRecipeRepository
+import com.example.core.domain.interactor.RecipeInteractor
+import com.example.core.domain.usecase.RecipeUseCase
 import com.google.firebase.firestore.FirebaseFirestore
 import dagger.Module
 import dagger.Provides
