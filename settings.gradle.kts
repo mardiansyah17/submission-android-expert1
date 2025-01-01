@@ -22,3 +22,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "SubmissionBelajarCompose"
 include(":app")
+include(":core")
