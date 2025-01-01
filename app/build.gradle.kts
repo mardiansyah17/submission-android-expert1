@@ -63,41 +63,6 @@ android {
 dependencies {
     implementation(project(":core"))
 
-    implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.lifecycle.runtime.ktx)
-    implementation(libs.androidx.activity.compose)
-    implementation(platform(libs.androidx.compose.bom))
-    implementation(libs.androidx.ui)
-    implementation(libs.androidx.ui.graphics)
-    implementation(libs.androidx.ui.tooling.preview)
-    implementation(libs.androidx.material3)
-
-    testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.espresso.core)
-    androidTestImplementation(platform(libs.androidx.compose.bom))
-    androidTestImplementation(libs.androidx.ui.test.junit4)
-    debugImplementation(libs.androidx.ui.tooling)
-    debugImplementation(libs.androidx.ui.test.manifest)
-
-
-    implementation(libs.material.icons.extended)
-    implementation(libs.androidx.constraintlayout.compose)
-    implementation(libs.coil.compose)
-    implementation(libs.lottie.compose)
-
-    implementation(libs.hilt.android)
+    api(libs.hilt.android)
     kapt(libs.hilt.android.compiler)
-
-
-    implementation(libs.androidx.hilt.navigation.compose)
-
-    implementation(platform(libs.supabase.bom))
-    implementation(libs.postgrest.kt)
-    implementation(libs.storage.kt)
-
-    implementation(libs.rxjava)
-    implementation(libs.rxandroid)
-    implementation(libs.adapter.rxjava3)
-    implementation(libs.androidx.lifecycle.reactivestreams.ktx)
 }

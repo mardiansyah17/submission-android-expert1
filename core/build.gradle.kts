@@ -60,30 +60,53 @@ kapt {
 
 dependencies {
 
-    implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.appcompat)
-    implementation(libs.material)
-    implementation(libs.firebase.common.ktx)
+    api(libs.androidx.core.ktx)
+    api(libs.androidx.appcompat)
+    api(libs.material)
+    api(libs.firebase.common.ktx)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 
+    api(libs.androidx.lifecycle.runtime.ktx)
+    api(libs.androidx.activity.compose)
+    api(platform(libs.androidx.compose.bom))
+    api(libs.androidx.ui)
+    api(libs.androidx.ui.graphics)
+    api(libs.androidx.ui.tooling.preview)
+    api(libs.androidx.material3)
+
+    api(libs.coil.compose)
+    api(libs.material.icons.extended)
+    api(libs.androidx.constraintlayout.compose)
+    api(libs.lottie.compose)
+
     api(libs.firebase.firestore)
     api(libs.firebase.storage)
 
-    implementation(libs.rxjava)
-    implementation(libs.rxandroid)
-    implementation(libs.adapter.rxjava3)
-    implementation(libs.androidx.lifecycle.reactivestreams.ktx)
+    api(libs.rxjava)
+    api(libs.rxandroid)
+    api(libs.adapter.rxjava3)
+    api(libs.androidx.lifecycle.reactivestreams.ktx)
 
-    implementation(libs.hilt.android)
+    api(libs.hilt.android)
     kapt(libs.hilt.android.compiler)
-    implementation(libs.androidx.hilt.navigation.compose)
+    api(libs.androidx.hilt.navigation.compose)
 
-    implementation(platform(libs.supabase.bom))
-    implementation(libs.postgrest.kt)
-    implementation(libs.storage.kt)
+    api(platform(libs.supabase.bom))
+    api(libs.postgrest.kt)
+    api(libs.storage.kt)
 
-    implementation(libs.ktor.client.core)
-    implementation(libs.ktor.client.cio)
+    api(libs.ktor.client.core)
+    api(libs.ktor.client.cio)
+
+
+    testImplementation(libs.junit)
+    androidTestImplementation(libs.androidx.junit)
+    androidTestImplementation(libs.androidx.espresso.core)
+    androidTestImplementation(platform(libs.androidx.compose.bom))
+    androidTestImplementation(libs.androidx.ui.test.junit4)
+    debugImplementation(libs.androidx.ui.tooling)
+    debugImplementation(libs.androidx.ui.test.manifest)
+
 }
