@@ -17,11 +17,6 @@ import javax.inject.Singleton
 @Module
 class RecipeModule {
 
-    @Provides
-    @Singleton
-    fun provideRecipeUseCase(recipeRepository: IRecipeRepository): RecipeUseCase {
-        return RecipeInteractor(recipeRepository)
-    }
 
     @Provides
     @Singleton

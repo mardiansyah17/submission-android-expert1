@@ -1,5 +1,6 @@
-package com.example.submissionbelajarcompose.presentation.screen.favorite
+package com.example.submissionbelajarcompose.favorite.presentation.favorite
 
+import android.content.Intent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -14,20 +15,18 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.example.core.data.Resource
 import com.example.submissionbelajarcompose.presentation.components.AppButton
 import com.example.submissionbelajarcompose.presentation.components.CardRecipe
 import com.example.submissionbelajarcompose.presentation.components.EmptyLayout
-import com.example.submissionbelajarcompose.presentation.components.InputTextField
 import com.example.submissionbelajarcompose.presentation.components.PullToRefreshBox
 import com.example.submissionbelajarcompose.presentation.navigation.NavigationGraph
 
@@ -35,12 +34,14 @@ import com.example.submissionbelajarcompose.presentation.navigation.NavigationGr
 @Composable
 fun FavoriteScreen(
     navHostController: NavHostController,
-    viewModel: FavoriteViewModel = hiltViewModel()
+    viewModel: FavoriteViewModel,
+    modifier: Modifier = Modifier
 ) {
 
     val stateRecipe = viewModel.recipes.collectAsState()
     val statePull = rememberPullToRefreshState()
     val isRefreshing = remember { mutableStateOf(false) }
+    val context = LocalContext.current
 
 
     when (val state = stateRecipe.value) {
@@ -99,7 +100,13 @@ fun FavoriteScreen(
                             description = recipe.description,
                             imageUrl = recipe.imageUrl,
                             onClick = {
-                                navHostController.navigate(NavigationGraph.DetailScreen(recipe.id).route)
+                                context.startActivity(
+                                    Intent(
+                                        context,
+                                        Class.forName("com.example.submissionbelajarcompose.detail.presentation.DetailScreen")
+                                    ).apply {
+                                        putExtra("recipeId", recipe.id)
+                                    })
                             },
                             onEdit = {
                                 navHostController.navigate(NavigationGraph.EditScreen(recipe.id).route)

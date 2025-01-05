@@ -17,7 +17,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.submissionbelajarcompose.ui.theme.AppTheme
+import com.example.core.ui.theme.AppTheme
 
 
 @Composable

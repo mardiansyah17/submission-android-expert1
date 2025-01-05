@@ -12,7 +12,7 @@ import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.example.submissionbelajarcompose.R
-import com.example.submissionbelajarcompose.ui.theme.AppTheme
+import com.example.core.ui.theme.AppTheme
 
 @Composable
 fun NotFoundLayout() {

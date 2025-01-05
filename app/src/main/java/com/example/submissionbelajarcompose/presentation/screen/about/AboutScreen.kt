@@ -15,7 +15,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
-import com.example.submissionbelajarcompose.ui.theme.AppTheme
+import com.example.core.ui.theme.AppTheme
 
 @Composable
 fun AboutScreen() {

@@ -15,7 +15,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -44,6 +43,7 @@ fun HomeScreen(
     val statePull = rememberPullToRefreshState()
     val isRefreshing = remember { mutableStateOf(false) }
     val loading = homeViewModel.loading.collectAsState()
+
 
     when (val state = stateRecipe.value) {
         is Resource.Loading -> {
@@ -109,6 +109,7 @@ fun HomeScreen(
                             description = recipe.description,
                             imageUrl = recipe.imageUrl,
                             onClick = {
+
                                 navHostController.navigate(NavigationGraph.DetailScreen(recipe.id).route)
                             },
                             onEdit = {

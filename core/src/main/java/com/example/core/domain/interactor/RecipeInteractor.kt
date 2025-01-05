@@ -7,8 +7,9 @@ import com.example.core.domain.usecase.RecipeUseCase
 import com.google.firebase.Timestamp
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Flowable
+import javax.inject.Inject
 
-class RecipeInteractor(
+class RecipeInteractor @Inject constructor(
     private val repository: IRecipeRepository
 ) : RecipeUseCase {
     override fun getRecipes(): Flowable<Resource<List<Recipe>>> {

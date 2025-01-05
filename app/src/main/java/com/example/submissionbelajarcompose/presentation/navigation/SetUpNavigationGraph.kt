@@ -1,5 +1,6 @@
 package com.example.submissionbelajarcompose.presentation.navigation
 
+import android.content.Intent
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -10,9 +11,12 @@ import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.PersonOutline
 import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material.icons.outlined.Home
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -24,7 +28,6 @@ import com.example.submissionbelajarcompose.presentation.screen.about.AboutScree
 import com.example.submissionbelajarcompose.presentation.screen.createRecipe.CreateRecipeScreen
 import com.example.submissionbelajarcompose.presentation.screen.detailRecipe.DetailRecipeScreen
 import com.example.submissionbelajarcompose.presentation.screen.editRecipe.EditRecipeScreen
-import com.example.submissionbelajarcompose.presentation.screen.favorite.FavoriteScreen
 import com.example.submissionbelajarcompose.presentation.screen.home.HomeScreen
 
 @Composable
@@ -34,7 +37,26 @@ fun SetUpNavigationGraph(
     ) {
     val navBackStackEntry = navHostController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry.value?.destination?.route
+    val context = LocalContext.current
+
     Scaffold(
+
+        floatingActionButton = {
+            if (currentRoute == TabNavigationGraph.HomeScreen.route) {
+                FloatingActionButton(
+                    onClick = {
+                        context.startActivity(
+                            Intent(
+                                context,
+                                Class.forName("com.example.submissionbelajarcompose.favorite.FavoriteActivity")
+                            )
+                        )
+                    }
+                ) {
+                    Icon(Icons.Default.Favorite, contentDescription = "Favorite Recipe")
+                }
+            }
+        },
 
         bottomBar = {
             if (
@@ -104,11 +126,7 @@ fun SetUpNavigationGraph(
                 EditRecipeScreen(navHostController = navHostController, id = id)
             }
 
-            composable(
-                TabNavigationGraph.FavoriteScreen.route
-            ) {
-                FavoriteScreen(navHostController)
-            }
+        
 
             composable(
                 TabNavigationGraph.AboutScreen.route

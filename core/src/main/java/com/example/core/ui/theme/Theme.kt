@@ -1,4 +1,4 @@
-package com.example.submissionbelajarcompose.ui.theme
+package com.example.core.ui.theme
 
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.lightColorScheme
