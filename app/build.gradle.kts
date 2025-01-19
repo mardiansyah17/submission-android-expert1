@@ -63,7 +63,6 @@ android {
 
 dependencies {
     implementation(project(":core"))
-
     api(libs.hilt.android)
     kapt(libs.hilt.android.compiler)
 }

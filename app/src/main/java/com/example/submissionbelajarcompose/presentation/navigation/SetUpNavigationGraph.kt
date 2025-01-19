@@ -29,6 +29,7 @@ import com.example.submissionbelajarcompose.presentation.screen.createRecipe.Cre
 import com.example.submissionbelajarcompose.presentation.screen.detailRecipe.DetailRecipeScreen
 import com.example.submissionbelajarcompose.presentation.screen.editRecipe.EditRecipeScreen
 import com.example.submissionbelajarcompose.presentation.screen.home.HomeScreen
+import com.example.submissionbelajarcompose.utils.DynamicFeatureUtils
 
 @Composable
 fun SetUpNavigationGraph(
@@ -45,12 +46,7 @@ fun SetUpNavigationGraph(
             if (currentRoute == TabNavigationGraph.HomeScreen.route) {
                 FloatingActionButton(
                     onClick = {
-                        context.startActivity(
-                            Intent(
-                                context,
-                                Class.forName("com.example.submissionbelajarcompose.favorite.FavoriteActivity")
-                            )
-                        )
+                        navHostController.navigate(TabNavigationGraph.FavoriteScreen.route)
                     }
                 ) {
                     Icon(Icons.Default.Favorite, contentDescription = "Favorite Recipe")
@@ -62,7 +58,6 @@ fun SetUpNavigationGraph(
             if (
                 currentRoute == TabNavigationGraph.HomeScreen.route ||
                 currentRoute == TabNavigationGraph.CreateScreen.route ||
-                currentRoute == TabNavigationGraph.FavoriteScreen.route ||
                 currentRoute == TabNavigationGraph.AboutScreen.route
             ) {
                 TabView(
@@ -103,11 +98,15 @@ fun SetUpNavigationGraph(
 
         NavHost(
             navController = navHostController,
-            startDestination = TabNavigationGraph.HomeScreen.route,
+            startDestination = TabNavigationGraph.FavoriteScreen.route,
             modifier = Modifier.padding(pading)
         ) {
             composable(TabNavigationGraph.HomeScreen.route) {
                 HomeScreen(navHostController)
+            }
+
+            composable(TabNavigationGraph.FavoriteScreen.route) {
+                DynamicFeatureUtils.favoriteScreen()
             }
 
             composable(TabNavigationGraph.CreateScreen.route) {
@@ -126,7 +125,7 @@ fun SetUpNavigationGraph(
                 EditRecipeScreen(navHostController = navHostController, id = id)
             }
 
-        
+
 
             composable(
                 TabNavigationGraph.AboutScreen.route
